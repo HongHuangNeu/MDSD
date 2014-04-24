@@ -1,0 +1,1 @@
+Module("names",[Imports([ImportWildcard("lib/runtime/nabl"),ImportWildcard("lib/runtime/task"),ImportWildcard("lib/runtime/properties"),ImportWildcard("lib/runtime/types"),ImportWildcard("lib/runtime/editor"),Import("include/CIL")]),Signature([Constructors([])])])

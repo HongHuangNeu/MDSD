@@ -1,0 +1,13 @@
+module general/CIL-Directive
+imports lex/CIL-Numbers
+
+exports
+  sorts Directive
+
+  context-free syntax
+    ".maxstack" Int -> Directive {cons("MaxStack")}
+    "ret"           -> Directive {cons("Return")}
+    "ldc.i4" Int    -> Directive {cons("LDC")}
+
+  context-free syntax
+    CONTENTCOMPLETE -> Directive {cons("COMPLETION-Directive")}

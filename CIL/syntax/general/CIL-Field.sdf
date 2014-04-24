@@ -1,0 +1,9 @@
+module general/CIL-Field
+exports
+  sorts Field
+
+  context-free syntax
+     -> Field {cons("Filed")}
+
+  context-free syntax
+    CONTENTCOMPLETE -> Field {cons("COMPLETION-Field")}

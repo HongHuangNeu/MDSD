@@ -1,0 +1,15 @@
+module editor/CIL-Outliner.generated
+
+imports
+  include/CIL
+  lib/runtime/editor/outline-library
+
+rules
+
+  outline = simple-label-outline(to-outline-label)
+  
+  to-outline-label = ?Property(<id>, _)
+  to-outline-label = ?Call(_, _, <id>, _, _)
+  to-outline-label = ?MainMethod(_, _, <id>, _, _, _)
+  to-outline-label = ?Method(_, _, <id>, _, _)
+  to-outline-label = ?Class(_, <id>, _)

@@ -1,0 +1,19 @@
+module CIL-Type.pp.generated
+
+strategies
+  prettyprint-Type :
+    Int() -> [ H(
+                 [SOpt(HS(), "0")]
+               , [S("int32")]
+               )
+             ]
+
+  prettyprint-Type :
+    Void() -> [ H(
+                  [SOpt(HS(), "0")]
+                , [S("void")]
+                )
+              ]
+
+  prettyprint-example =
+    prettyprint-Type

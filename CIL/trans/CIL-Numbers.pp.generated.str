@@ -1,0 +1,8 @@
+module CIL-Numbers.pp.generated
+
+strategies
+  prettyprint-Int =
+    ![S(<is-string>)]
+
+  prettyprint-example =
+    prettyprint-Int

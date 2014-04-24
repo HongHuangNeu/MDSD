@@ -1,0 +1,1 @@
+Module("runtime/index/utils",[Rules([SDefNoArgs("index-setup-paths",Call(SVar("try"),[Seq(CallNoArgs(SVar("is-list")),CallNoArgs(SVar("Hd")))]))])])

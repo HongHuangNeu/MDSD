@@ -1,0 +1,8 @@
+module CIL-WhiteSpace.pp.generated
+
+strategies
+  prettyprint-EOF =
+    ![S(<is-string>)]
+
+  prettyprint-example =
+    prettyprint-EOF

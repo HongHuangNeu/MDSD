@@ -1,0 +1,66 @@
+module CilPP/CIL-Call.pp.generated
+
+strategies
+  prettyprint-Call :
+    Call(a, b, c, d, e) -> [ H(
+                               [SOpt(HS(), "0")]
+                             , [ S("call ")
+                               , a0
+                               , S(" ")
+                               , b0
+                               , c0
+                               , S("::")
+                               , d0
+                               , S("(")
+                               , e0
+                               , S(")")
+                               ]
+                             )
+                           ]
+    where a0 := <pp-one-Z(prettyprint-ReturnType)> a
+    where b0 := <pp-one-Z(prettyprint-Library)> b
+    where c0 := <pp-one-Z(prettyprint-Object)> c
+    where d0 := <pp-one-Z(prettyprint-MethodName)> d
+    where e0 := <pp-H-list(prettyprint-Type|",")> e
+
+  prettyprint-ReturnType :
+    a -> [ H(
+             [SOpt(HS(), "0")]
+           , [a1]
+           )
+         ]
+    where a1 := <pp-one-Z(prettyprint-Type)> a
+
+  prettyprint-Library :
+    MSLibrary() -> [ H(
+                       [SOpt(HS(), "0")]
+                     , [S("[mscorlib]")]
+                     )
+                   ]
+
+  prettyprint-Object :
+    Object(a) -> [ H(
+                     [SOpt(HS(), "0")]
+                   , [a2]
+                   )
+                 ]
+    where a2 := <pp-one-Z(prettyprint-ClassName)> a
+
+  prettyprint-Library :
+    None() -> [ H(
+                  [SOpt(HS(), "0")]
+                , []
+                )
+              ]
+
+  prettyprint-example =
+    prettyprint-Call
+
+  prettyprint-example =
+    prettyprint-ReturnType
+
+  prettyprint-example =
+    prettyprint-Object
+
+  prettyprint-example =
+    prettyprint-Library

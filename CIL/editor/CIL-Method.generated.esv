@@ -1,0 +1,18 @@
+
+module CIL-Method.generated
+
+completions
+  completion template Method : ".method public specialname rtspecialname void .ctor() cil managed { }" =
+    ".method public specialname rtspecialname void .ctor() cil managed\n{\n\t" (cursor) "\n}" (blank)  
+  completion template Method : ".method static Type MethodName() { EntryPoint }" =
+    ".method " <:MethodAccess> " static " <Type:Type> " " <MethodName:MethodName> "()\n{\n" <EntryPoint:EntryPoint> "\n" (cursor) "\n}" (blank)  
+  completion template Method : ".method Type MethodName() { }" =
+    ".method " <:MethodAccess> " " <Type:Type> " " <MethodName:MethodName> "()\n{\n\t" (cursor) "\n}" (blank)  
+  completion template MethodAccess : "public" =
+    "public"                                                                                     
+  completion template MethodAccess : "specialname" =
+    "specialname"                                                                           
+  completion template MethodAccess : "rtspecialname" =
+    "rtspecialname"                                                                       
+  completion template EntryPoint : ".entrypoint" =
+    ".entrypoint"                                                                             

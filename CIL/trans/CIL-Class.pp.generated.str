@@ -1,0 +1,41 @@
+module CIL-Class.pp.generated
+
+strategies
+  prettyprint-Class :
+    Class(a, b, c) -> [ H(
+                          [SOpt(HS(), "0")]
+                        , [ S(".class ")
+                          , a98
+                          , S(" ")
+                          , b26
+                          ]
+                        )
+                      , H(
+                          [SOpt(HS(), "0")]
+                        , [S("{")]
+                        )
+                      , H(
+                          [SOpt(HS(), "0")]
+                        , [c13]
+                        )
+                      , H(
+                          [SOpt(HS(), "0")]
+                        , [S("}")]
+                        )
+                      ]
+    where a98 := <pp-H-list(prettyprint-ClassAccess)> a
+    where b26 := <pp-one-Z(prettyprint-ClassName)> b
+    where c13 := <pp-V-list(prettyprint-Method)> c
+
+  prettyprint-ClassAccess :
+    PUBLIC() -> [ H(
+                    [SOpt(HS(), "0")]
+                  , [S("public")]
+                  )
+                ]
+
+  prettyprint-example =
+    prettyprint-Class
+
+  prettyprint-example =
+    prettyprint-ClassAccess

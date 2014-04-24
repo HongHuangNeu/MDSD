@@ -1,0 +1,15 @@
+module general/CIL-Statement
+imports general/CIL-Directive lex/CIL-Names general/CIL-Call
+
+exports
+  sorts Statement
+
+  context-free syntax
+    Directive     -> Statement 
+    Label         -> Statement 
+    Call          -> Statement 
+    LabelName ":" -> Label     
+
+  context-free syntax
+    CONTENTCOMPLETE -> Statement {cons("COMPLETION-Statement")}
+    CONTENTCOMPLETE -> Label     {cons("COMPLETION-Label")}

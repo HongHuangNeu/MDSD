@@ -1,0 +1,1 @@
+Module("runtime/index/query",[Rules([SDefT("index-get-all",[],[],[]),SDefT("index-get-children",[],[],[]),SDefT("index-get-all-partitions",[],[],[]),SDefT("index-get-all-in-partition",[],[],[]),SDefT("index-get-partitions-of",[],[],[])])])

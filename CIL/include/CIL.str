@@ -1,0 +1,60 @@
+module CIL
+
+signature
+  constructors
+                  : CilFILE -> Start
+    File          : CILHeader * List(Component) -> CilFILE
+                  : Class -> Component
+                  : Method -> Component
+    PUBLIC        : ClassAccess
+    Class         : List(ClassAccess) * ClassName * List(Method) -> Class
+    EntryPoint    : EntryPoint
+    RTSPECIALNAME : MethodAccess
+    SPECIALNAME   : MethodAccess
+    PUBLIC        : MethodAccess
+    Method        : List(MethodAccess) * Type * MethodName * List(Type) * List(Statement) -> Method
+    MainMethod    : List(MethodAccess) * Type * MethodName * List(Type) * EntryPoint * List(Statement) -> Method
+    Constructor   : List(Type) * List(Statement) -> Method
+    Filed         : Field
+    Property      : ClassName * List(ClassName) -> Property
+    CallExternal  : CallExternal
+    Header        : CallExternal * Property -> CILHeader
+                  : Call -> Statement
+                  : Directive -> Statement
+    Object        : ClassName -> Object
+    None          : Library
+    MSLibrary     : Library
+                  : Type -> ReturnType
+    Call          : ReturnType * Library * Object * MethodName * List(Type) -> Call
+    LDC           : Int -> Directive
+    Return        : Directive
+    MaxStack      : Int -> Directive
+    Void          : Type
+    Int           : Type
+    MRef          : MethodName -> MRef
+    FRef          : FieldName -> FRef
+    LabelRef      : LabelName -> LabelRef
+    VarNum        : Int -> VarRef
+    CRef          : ClassName -> ClassRef
+                  : Identifier -> MethodName
+                  : Identifier -> FieldName
+                  : QualifiedName -> ClassName
+                  : String -> LabelName
+                  : String -> QualifiedName
+                  : String -> SQIdentifier
+                  : String -> Identifier
+                  : Int -> Constant
+                  : String -> Int
+
+
+signature
+  constructors
+    Some : a -> Option(a)
+    None : Option(a)
+
+
+signature
+  constructors
+    Cons : a * List(a) -> List(a)
+    Nil  : List(a)
+    Conc : List(a) * List(a) -> List(a)

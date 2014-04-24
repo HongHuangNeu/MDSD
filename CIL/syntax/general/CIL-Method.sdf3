@@ -1,0 +1,36 @@
+module general/CIL-Method
+imports
+lex/CIL-Names
+general/CIL-Type
+general/CIL-Statement
+general/CIL-Directive 
+sorts
+Method
+templates
+Method.Constructor=
+<
+.method public specialname rtspecialname void .ctor(<Type*;separator=",",hide>) cil managed
+{
+	<Statement*;separator="\n">
+}
+>{prefer}
+
+Method.MainMethod=
+<
+.method <MethodAccess*> static <Type> <MethodName>(<Type*;separator=",",hide>)
+{
+<EntryPoint>
+<Statement*;separator="\n">
+}
+>{prefer}
+Method.Method=
+<
+.method <MethodAccess*> <Type> <MethodName>(<Type*;separator=",",hide>)
+{
+	<Statement*;separator="\n">
+}
+>
+MethodAccess.PUBLIC=<public>
+MethodAccess.SPECIALNAME=<specialname>
+MethodAccess.RTSPECIALNAME=<rtspecialname>
+EntryPoint.EntryPoint=<.entrypoint> 

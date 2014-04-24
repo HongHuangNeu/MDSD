@@ -1,0 +1,12 @@
+module general/CIL-Component
+imports general/CIL-Class general/CIL-Method
+
+exports
+  sorts Component
+
+  context-free syntax
+    Method -> Component 
+    Class  -> Component 
+
+  context-free syntax
+    CONTENTCOMPLETE -> Component {cons("COMPLETION-Component")}

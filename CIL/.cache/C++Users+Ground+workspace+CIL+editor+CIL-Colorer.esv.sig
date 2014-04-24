@@ -1,0 +1,1 @@
+Module("CIL-Colorer",Imports([Import("CIL-Colorer.generated")]),[Colorer("",[])])

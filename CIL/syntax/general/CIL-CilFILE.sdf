@@ -1,0 +1,11 @@
+module general/CIL-CilFILE
+imports general/CIL-Header general/CIL-Component
+
+exports
+  sorts CilFILE
+
+  context-free syntax
+    CILHeader Component* -> CilFILE {cons("File")}
+
+  context-free syntax
+    CONTENTCOMPLETE -> CilFILE {cons("COMPLETION-CilFILE")}

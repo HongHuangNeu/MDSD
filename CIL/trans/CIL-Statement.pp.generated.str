@@ -1,0 +1,40 @@
+module CIL-Statement.pp.generated
+
+strategies
+  prettyprint-Statement :
+    a -> [ H(
+             [SOpt(HS(), "0")]
+           , [a108]
+           )
+         ]
+    where a108 := <pp-one-Z(prettyprint-Directive)> a
+
+  prettyprint-Statement :
+    a -> [ H(
+             [SOpt(HS(), "0")]
+           , [a109]
+           )
+         ]
+    where a109 := <pp-one-Z(prettyprint-Label)> a
+
+  prettyprint-Statement :
+    a -> [ H(
+             [SOpt(HS(), "0")]
+           , [a110]
+           )
+         ]
+    where a110 := <pp-one-Z(prettyprint-Call)> a
+
+  prettyprint-Label :
+    a -> [ H(
+             [SOpt(HS(), "0")]
+           , [a111, S(":")]
+           )
+         ]
+    where a111 := <pp-one-Z(prettyprint-LabelName)> a
+
+  prettyprint-example =
+    prettyprint-Statement
+
+  prettyprint-example =
+    prettyprint-Label

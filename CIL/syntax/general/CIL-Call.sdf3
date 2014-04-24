@@ -1,0 +1,13 @@
+module general/CIL-Call
+imports
+lex/CIL-Names
+general/CIL-Type
+sorts
+Call
+templates
+Call.Call=<call <ReturnType> <Library><Object>::<MethodName>(<Type*;separator=",",hide>)>
+
+ReturnType=<<Type>>  
+Library.MSLibrary=<[mscorlib]>
+Object.Object=<<ClassName>>
+Library.None=<<>>

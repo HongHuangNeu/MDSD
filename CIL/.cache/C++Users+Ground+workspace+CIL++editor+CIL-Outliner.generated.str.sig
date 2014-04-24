@@ -1,0 +1,1 @@
+Module("editor/CIL-Outliner.generated",[Imports([(),()]),Rules([SDefT("outline",[],[],[]),SDefT("to-outline-label",[],[],[])])])

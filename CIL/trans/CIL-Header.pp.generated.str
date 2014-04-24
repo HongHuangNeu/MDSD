@@ -1,0 +1,49 @@
+module CIL-Header.pp.generated
+
+strategies
+  prettyprint-CILHeader :
+    Header(a, b) -> [ H(
+                        [SOpt(HS(), "0")]
+                      , [a103]
+                      )
+                    , H(
+                        [SOpt(HS(), "0")]
+                      , [b27]
+                      )
+                    ]
+    where a103 := <pp-one-Z(prettyprint-CallExternal)> a
+    where b27 := <pp-one-Z(prettyprint-Property)> b
+
+  prettyprint-CallExternal :
+    CallExternal() -> [ H(
+                          [SOpt(HS(), "0")]
+                        , [S(".assembly extern mscorlib {}")]
+                        )
+                      ]
+
+  prettyprint-Property :
+    Property(a, b) -> [ H(
+                          [SOpt(HS(), "0")]
+                        , [S(".assembly "), a104]
+                        )
+                      , H(
+                          [SOpt(HS(), "0")]
+                        , [S("{")]
+                        )
+                      , b28
+                      , H(
+                          [SOpt(HS(), "0")]
+                        , [S("}")]
+                        )
+                      ]
+    where a104 := <pp-one-Z(prettyprint-ClassName)> a
+    where b28 := <pp-indent(|"4")> [<pp-H-list(prettyprint-ClassName)> b]
+
+  prettyprint-example =
+    prettyprint-CILHeader
+
+  prettyprint-example =
+    prettyprint-CallExternal
+
+  prettyprint-example =
+    prettyprint-Property

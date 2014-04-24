@@ -1,0 +1,10 @@
+module general/CIL-Type
+exports
+  sorts Type
+
+  context-free syntax
+    "int32" -> Type {cons("Int")}
+    "void"  -> Type {cons("Void")}
+
+  context-free syntax
+    CONTENTCOMPLETE -> Type {cons("COMPLETION-Type")}

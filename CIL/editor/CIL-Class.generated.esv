@@ -1,0 +1,8 @@
+
+module CIL-Class.generated
+
+completions
+  completion template Class : ".class ClassName { }" =
+    ".class " <:ClassAccess> " " <ClassName:ClassName> "\n{\n" (cursor) "\n}" (blank)  
+  completion template ClassAccess : "public" =
+    "public"                            

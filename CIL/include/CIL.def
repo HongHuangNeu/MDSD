@@ -1,0 +1,291 @@
+definition
+module general/CIL-Call
+imports lex/CIL-Names general/CIL-Type
+
+exports
+  sorts Call
+
+  context-free syntax
+    "call" ReturnType Library Object "::" MethodName "(" {Type ","}* ")" -> Call       {cons("Call")}
+    Type                                                                 -> ReturnType 
+    "[mscorlib]"                                                         -> Library    {cons("MSLibrary")}
+    ClassName                                                            -> Object     {cons("Object")}
+                                                                         -> Library    {cons("None")}
+
+  context-free syntax
+    CONTENTCOMPLETE -> Call       {cons("COMPLETION-Call")}
+    CONTENTCOMPLETE -> ReturnType {cons("COMPLETION-ReturnType")}
+    CONTENTCOMPLETE -> Object     {cons("COMPLETION-Object")}
+    CONTENTCOMPLETE -> Library    {cons("COMPLETION-Library")}
+
+module general/CIL-CilFILE
+imports general/CIL-Header general/CIL-Component
+
+exports
+  sorts CilFILE
+
+  context-free syntax
+    CILHeader Component* -> CilFILE {cons("File")}
+
+  context-free syntax
+    CONTENTCOMPLETE -> CilFILE {cons("COMPLETION-CilFILE")}
+
+module general/CIL-Class
+imports lex/CIL-Names general/CIL-Type general/CIL-Statement
+        general/CIL-Directive general/CIL-Method
+
+exports
+  context-free syntax
+    ".class" ClassAccess* ClassName "{" Method* "}" -> Class       {cons("Class")}
+    "public"                                        -> ClassAccess {cons("PUBLIC")}
+
+  context-free syntax
+    CONTENTCOMPLETE -> Class       {cons("COMPLETION-Class")}
+    CONTENTCOMPLETE -> ClassAccess {cons("COMPLETION-ClassAccess")}
+
+module general/CIL-Directive
+imports lex/CIL-Numbers
+
+exports
+  sorts Directive
+
+  context-free syntax
+    ".maxstack" Int -> Directive {cons("MaxStack")}
+    "ret"           -> Directive {cons("Return")}
+    "ldc.i4" Int    -> Directive {cons("LDC")}
+
+  context-free syntax
+    CONTENTCOMPLETE -> Directive {cons("COMPLETION-Directive")}
+
+module general/CIL-Method
+imports lex/CIL-Names general/CIL-Type general/CIL-Statement
+        general/CIL-Directive
+
+exports
+  sorts Method
+
+  context-free syntax
+    ".method" "public" "specialname" "rtspecialname" "void" ".ctor" "(" {Type ","}* ")" "cil" "managed" "{" Statement* "}" -> Method       {cons("Constructor"), prefer}
+    ".method" MethodAccess* "static" Type MethodName "(" {Type ","}* ")" "{" EntryPoint Statement* "}"                     -> Method       {cons("MainMethod"), prefer}
+    ".method" MethodAccess* Type MethodName "(" {Type ","}* ")" "{" Statement* "}"                                         -> Method       {cons("Method")}
+    "public"                                                                                                               -> MethodAccess {cons("PUBLIC")}
+    "specialname"                                                                                                          -> MethodAccess {cons("SPECIALNAME")}
+    "rtspecialname"                                                                                                        -> MethodAccess {cons("RTSPECIALNAME")}
+    ".entrypoint"                                                                                                          -> EntryPoint   {cons("EntryPoint")}
+
+  context-free syntax
+    CONTENTCOMPLETE -> Method       {cons("COMPLETION-Method")}
+    CONTENTCOMPLETE -> MethodAccess {cons("COMPLETION-MethodAccess")}
+    CONTENTCOMPLETE -> EntryPoint   {cons("COMPLETION-EntryPoint")}
+
+module general/CIL-Component
+imports general/CIL-Class general/CIL-Method
+
+exports
+  sorts Component
+
+  context-free syntax
+    Method -> Component 
+    Class  -> Component 
+
+  context-free syntax
+    CONTENTCOMPLETE -> Component {cons("COMPLETION-Component")}
+
+module general/CIL-Field
+exports
+  sorts Field
+
+  context-free syntax
+     -> Field {cons("Filed")}
+
+  context-free syntax
+    CONTENTCOMPLETE -> Field {cons("COMPLETION-Field")}
+
+module general/CIL-Header
+imports lex/CIL-Names
+
+exports
+  sorts CILHeader
+
+  context-free syntax
+    CallExternal Property                    -> CILHeader    {cons("Header")}
+    ".assembly" "extern" "mscorlib" "{}"     -> CallExternal {cons("CallExternal")}
+    ".assembly" ClassName "{" ClassName* "}" -> Property     {cons("Property")}
+
+  context-free syntax
+    CONTENTCOMPLETE -> CILHeader    {cons("COMPLETION-CILHeader")}
+    CONTENTCOMPLETE -> CallExternal {cons("COMPLETION-CallExternal")}
+    CONTENTCOMPLETE -> Property     {cons("COMPLETION-Property")}
+
+module general/CIL-Statement
+imports general/CIL-Directive lex/CIL-Names general/CIL-Call
+
+exports
+  sorts Statement
+
+  context-free syntax
+    Directive     -> Statement 
+    Label         -> Statement 
+    Call          -> Statement 
+    LabelName ":" -> Label     
+
+  context-free syntax
+    CONTENTCOMPLETE -> Statement {cons("COMPLETION-Statement")}
+    CONTENTCOMPLETE -> Label     {cons("COMPLETION-Label")}
+
+module general/CIL-Type
+exports
+  sorts Type
+
+  context-free syntax
+    "int32" -> Type {cons("Int")}
+    "void"  -> Type {cons("Void")}
+
+  context-free syntax
+    CONTENTCOMPLETE -> Type {cons("COMPLETION-Type")}
+
+module lex/CIL-WhiteSpace
+exports
+  lexical syntax
+    [\ \t\n\r]                       -> LAYOUT 
+    ";" [\n\r]                       -> LAYOUT 
+    ";" [\ \t] ~[\n\r]* [\n\r] | EOF -> LAYOUT 
+                                     -> EOF    
+
+  lexical restrictions
+    EOF -/- ~[]
+
+  context-free restrictions
+    LAYOUT? -/- [\ \t\n\r]
+    LAYOUT? -/- [\;] . [\ \t]
+    LAYOUT? -/- [\;] . [\n\r]
+
+module lex/CIL-Numbers
+exports
+  sorts Constant Int
+
+  lexical syntax
+    [0-9] [0-9]* -> Int 
+
+  lexical restrictions
+    Int -/- [0-9]
+
+  context-free syntax
+    Int -> Constant 
+
+module lex/CIL-Names
+imports lex/CIL-Numbers
+
+exports
+  sorts Identifier SQIdentifier QualifiedName LabelName ClassName FieldName
+        MethodName ClassRef VarRef LabelRef FRef MRef
+
+  lexical syntax
+    [A-Za-z] [A-Za-z0-9\_]* -> Identifier    
+    Identifier              -> SQIdentifier  
+    "'" Identifier "'"      -> SQIdentifier  
+    {Identifier "."}+       -> QualifiedName 
+    ~[\=\:\.\"\-\ \t\n\r]+  -> LabelName     
+    "extern"                -> Identifier    {reject}
+    "mscorlib"              -> Identifier    {reject}
+    "assembly"              -> Identifier    {reject}
+    "extern"                -> LabelName     {reject}
+    "mscorlib"              -> LabelName     {reject}
+    "assembly"              -> LabelName     {reject}
+    "ret"                   -> LabelName     {reject}
+    "ret"                   -> Identifier    {reject}
+    "call"                  -> LabelName     {reject}
+    "call"                  -> Identifier    {reject}
+    "void"                  -> LabelName     {reject}
+    "void"                  -> Identifier    {reject}
+    "int32"                 -> LabelName     {reject}
+    "int32"                 -> Identifier    {reject}
+    "[mscorlib]"            -> LabelName     {reject}
+    "[mscorlib]"            -> Identifier    {reject}
+
+  lexical restrictions
+    Identifier -/- [a-zA-Z0-9\_]
+    LabelName -/- ~[\=\:\.\"\-\ \t\n\r]
+
+  context-free syntax
+    QualifiedName -> ClassName  
+    Identifier    -> FieldName  
+    Identifier    -> MethodName 
+    SQIdentifier  -> VarName    
+    Identifier    -> VarName    
+
+  context-free syntax
+    CONTENTCOMPLETE -> ClassName  {cons("COMPLETION-ClassName")}
+    CONTENTCOMPLETE -> FieldName  {cons("COMPLETION-FieldName")}
+    CONTENTCOMPLETE -> MethodName {cons("COMPLETION-MethodName")}
+    CONTENTCOMPLETE -> VarName    {cons("COMPLETION-VarName")}
+
+  context-free syntax
+    ClassName  -> ClassRef {cons("CRef")}
+    Int        -> VarRef   {cons("VarNum")}
+    LabelName  -> LabelRef {cons("LabelRef")}
+    FieldName  -> FRef     {cons("FRef")}
+    MethodName -> MRef     {cons("MRef")}
+
+  context-free syntax
+    CONTENTCOMPLETE -> ClassRef {cons("COMPLETION-ClassRef")}
+    CONTENTCOMPLETE -> VarRef   {cons("COMPLETION-VarRef")}
+    CONTENTCOMPLETE -> LabelRef {cons("COMPLETION-LabelRef")}
+    CONTENTCOMPLETE -> FRef     {cons("COMPLETION-FRef")}
+    CONTENTCOMPLETE -> MRef     {cons("COMPLETION-MRef")}
+
+  syntax
+    
+
+  context-free syntax
+    "byte"    -> BaseTypeName {cons("ByteName")}
+    "char"    -> BaseTypeName {cons("CharName")}
+    "double"  -> BaseTypeName {cons("DoubleName")}
+    "float"   -> BaseTypeName {cons("FloatName")}
+    "int"     -> BaseTypeName {cons("IntName")}
+    "long"    -> BaseTypeName {cons("LongName")}
+    "short"   -> BaseTypeName {cons("ShortName")}
+    "boolean" -> BaseTypeName {cons("BooleanName")}
+
+module Common
+exports
+  lexical syntax
+    [a-zA-Z] [a-zA-Z0-9]*              -> ID            
+    "-"? [0-9]+                        -> INT           
+    "\"" StringChar* "\""              -> STRING        
+    ~[\"\n]                            -> StringChar    
+    "\\\""                             -> StringChar    
+    BackSlashChar                      -> StringChar    
+    "\\"                               -> BackSlashChar 
+    [\ \t\n\r]                         -> LAYOUT        
+    [\*]                               -> CommentChar   
+    "/*" ( ~[\*] | CommentChar )* "*/" -> LAYOUT        
+    "//" ~[\n\r]* [\n\r] | EOF         -> LAYOUT        
+                                       -> EOF           
+
+  lexical restrictions
+    CommentChar -/- [\/]
+    INT -/- [0-9]
+    ID -/- [a-zA-Z0-9\_]
+    EOF -/- ~[]
+    BackSlashChar -/- [\"]
+
+  context-free restrictions
+    LAYOUT? -/- [\ \t\n\r]
+    LAYOUT? -/- [\/] . [\/]
+    LAYOUT? -/- [\/] . [\*]
+
+module CIL
+imports Common lex/CIL-Names lex/CIL-Numbers lex/CIL-WhiteSpace general/CIL-Type
+        general/CIL-Statement general/CIL-Header general/CIL-Field
+        general/CIL-Component general/CIL-Method general/CIL-Directive
+        general/CIL-Class general/CIL-CilFILE general/CIL-Call
+
+exports
+  context-free start-symbols
+    Start Identifier SQIdentifier QualifiedName LabelName ClassName FieldName
+    MethodName ClassRef VarRef LabelRef FRef MRef Constant Int Type Statement
+    Method CILHeader Field Directive Component Class CilFILE Call
+
+  context-free syntax
+    CilFILE -> Start 

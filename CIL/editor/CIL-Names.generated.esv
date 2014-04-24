@@ -1,0 +1,25 @@
+module CIL-Names.generated
+
+completions
+  
+
+completions
+  
+
+completions
+  completion template BaseTypeName : "byte" =
+    "byte"  
+  completion template BaseTypeName : "char" =
+    "char"  
+  completion template BaseTypeName : "double" =
+    "double"  
+  completion template BaseTypeName : "float" =
+    "float"  
+  completion template BaseTypeName : "int" =
+    "int"  
+  completion template BaseTypeName : "long" =
+    "long"  
+  completion template BaseTypeName : "short" =
+    "short"  
+  completion template BaseTypeName : "boolean" =
+    "boolean"  

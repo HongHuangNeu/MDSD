@@ -1,0 +1,137 @@
+module CIL-Names.pp.generated
+
+strategies
+  prettyprint-SQIdentifier =
+    ![S(<is-string>)]
+
+  prettyprint-QualifiedName =
+    ![S(<is-string>)]
+
+  prettyprint-LabelName =
+    ![S(<is-string>)]
+
+  prettyprint-Identifier =
+    ![S(<is-string>)]
+
+  prettyprint-example =
+    prettyprint-SQIdentifier
+
+  prettyprint-example =
+    prettyprint-QualifiedName
+
+  prettyprint-example =
+    prettyprint-LabelName
+
+  prettyprint-example =
+    prettyprint-Identifier
+
+
+strategies
+  prettyprint-ClassName :
+    a -> [ H(
+             [SOpt(HS(), "0")]
+           , [a112]
+           )
+         ]
+    where a112 := <pp-one-Z(prettyprint-QualifiedName)> a
+
+  prettyprint-FieldName :
+    a -> [ H(
+             [SOpt(HS(), "0")]
+           , [a113]
+           )
+         ]
+    where a113 := <pp-one-Z(prettyprint-Identifier)> a
+
+  prettyprint-MethodName :
+    a -> [ H(
+             [SOpt(HS(), "0")]
+           , [a114]
+           )
+         ]
+    where a114 := <pp-one-Z(prettyprint-Identifier)> a
+
+  prettyprint-VarName :
+    a -> [ H(
+             [SOpt(HS(), "0")]
+           , [a115]
+           )
+         ]
+    where a115 := <pp-one-Z(prettyprint-SQIdentifier)> a
+
+  prettyprint-VarName :
+    a -> [ H(
+             [SOpt(HS(), "0")]
+           , [a116]
+           )
+         ]
+    where a116 := <pp-one-Z(prettyprint-Identifier)> a
+
+  prettyprint-example =
+    prettyprint-ClassName
+
+  prettyprint-example =
+    prettyprint-FieldName
+
+  prettyprint-example =
+    prettyprint-MethodName
+
+  prettyprint-example =
+    prettyprint-VarName
+
+
+strategies
+  prettyprint-ClassRef :
+    CRef(a) -> [ H(
+                   [SOpt(HS(), "0")]
+                 , [a117]
+                 )
+               ]
+    where a117 := <pp-one-Z(prettyprint-ClassName)> a
+
+  prettyprint-VarRef :
+    VarNum(a) -> [ H(
+                     [SOpt(HS(), "0")]
+                   , [a118]
+                   )
+                 ]
+    where a118 := <pp-one-Z(prettyprint-Int)> a
+
+  prettyprint-LabelRef :
+    LabelRef(a) -> [ H(
+                       [SOpt(HS(), "0")]
+                     , [a119]
+                     )
+                   ]
+    where a119 := <pp-one-Z(prettyprint-LabelName)> a
+
+  prettyprint-FRef :
+    FRef(a) -> [ H(
+                   [SOpt(HS(), "0")]
+                 , [a120]
+                 )
+               ]
+    where a120 := <pp-one-Z(prettyprint-FieldName)> a
+
+  prettyprint-MRef :
+    MRef(a) -> [ H(
+                   [SOpt(HS(), "0")]
+                 , [a121]
+                 )
+               ]
+    where a121 := <pp-one-Z(prettyprint-MethodName)> a
+
+  prettyprint-example =
+    prettyprint-ClassRef
+
+  prettyprint-example =
+    prettyprint-VarRef
+
+  prettyprint-example =
+    prettyprint-LabelRef
+
+  prettyprint-example =
+    prettyprint-FRef
+
+  prettyprint-example =
+    prettyprint-MRef

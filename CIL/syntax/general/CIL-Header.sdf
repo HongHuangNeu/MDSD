@@ -1,0 +1,15 @@
+module general/CIL-Header
+imports lex/CIL-Names
+
+exports
+  sorts CILHeader
+
+  context-free syntax
+    CallExternal Property                    -> CILHeader    {cons("Header")}
+    ".assembly" "extern" "mscorlib" "{}"     -> CallExternal {cons("CallExternal")}
+    ".assembly" ClassName "{" ClassName* "}" -> Property     {cons("Property")}
+
+  context-free syntax
+    CONTENTCOMPLETE -> CILHeader    {cons("COMPLETION-CILHeader")}
+    CONTENTCOMPLETE -> CallExternal {cons("COMPLETION-CallExternal")}
+    CONTENTCOMPLETE -> Property     {cons("COMPLETION-Property")}

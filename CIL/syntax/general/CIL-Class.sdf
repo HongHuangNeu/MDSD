@@ -1,0 +1,12 @@
+module general/CIL-Class
+imports lex/CIL-Names general/CIL-Type general/CIL-Statement
+        general/CIL-Directive general/CIL-Method
+
+exports
+  context-free syntax
+    ".class" ClassAccess* ClassName "{" Method* "}" -> Class       {cons("Class")}
+    "public"                                        -> ClassAccess {cons("PUBLIC")}
+
+  context-free syntax
+    CONTENTCOMPLETE -> Class       {cons("COMPLETION-Class")}
+    CONTENTCOMPLETE -> ClassAccess {cons("COMPLETION-ClassAccess")}

@@ -1,0 +1,12 @@
+module CilPP/CIL-Field.pp.generated
+
+strategies
+  prettyprint-Field :
+    Filed() -> [ H(
+                   []
+                 , [S("")]
+                 )
+               ]
+
+  prettyprint-example =
+    prettyprint-Field

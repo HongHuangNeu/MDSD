@@ -1,0 +1,64 @@
+module CIL
+
+imports 
+
+	Common
+	lex/CIL-Names
+	lex/CIL-Numbers
+	lex/CIL-WhiteSpace
+	general/CIL-Type
+	general/CIL-Statement
+general/CIL-Header
+   general/CIL-Field
+   general/CIL-Component
+   general/CIL-Method
+   general/CIL-Directive
+   general/CIL-Class
+   general/CIL-CilFILE
+   general/CIL-Call
+context-free start-symbols
+
+	Start
+    //Names
+    Identifier
+    SQIdentifier
+    QualifiedName
+	LabelName
+    
+    ClassName
+	FieldName
+    MethodName
+    
+	ClassRef
+	VarRef
+	 
+	LabelRef
+	FRef
+	MRef
+    //Numbers
+    Constant
+    Int
+    //Type
+    Type   
+    //Statement
+    Statement 
+    //Method
+    Method
+    //CILHeader
+    CILHeader
+    //MicroLib
+    //Field
+    Field
+    //Directive
+    Directive
+    //Component
+    Component
+    //Class
+    Class
+    CilFILE
+    //Call
+    Call
+context-free syntax
+
+    Start		=CilFILE  
+		 

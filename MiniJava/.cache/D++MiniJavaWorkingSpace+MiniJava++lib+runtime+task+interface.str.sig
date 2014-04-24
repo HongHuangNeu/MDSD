@@ -1,0 +1,1 @@
+Module("runtime/task/interface",[Strategies([SDefT("perform-task",[],[VarDec("nr",ConstType(SortNoArgs("ATerm")))],[]),SDefT("task-rewrite",[],[],[]),SDefT("task-match",[],[],[]),SDefT("avoid-task",[],[VarDec("dep*",ConstType(SortNoArgs("ATerm")))],[]),SDefT("task-is-combinator",[],[],[]),SDefT("task-short-circuit",[],[],[])])])

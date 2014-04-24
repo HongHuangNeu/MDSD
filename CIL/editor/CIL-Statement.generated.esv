@@ -1,0 +1,5 @@
+module CIL-Statement.generated
+
+completions
+  completion template Label : "LabelName:" =
+    <LabelName:LabelName> ":"  

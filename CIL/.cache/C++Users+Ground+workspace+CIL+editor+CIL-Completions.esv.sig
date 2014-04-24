@@ -1,0 +1,1 @@
+Module("CIL-Completions",Imports([Import("CIL-Completions.generated")]),[Completions("",[]),Completions("",[]),Completions("",[CompletionProposer([],Strategy("editor-complete")),CompletionTrigger(String("\".\""),None)])])

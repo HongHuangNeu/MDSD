@@ -1,0 +1,11 @@
+module general/CIL-Directive
+imports
+lex/CIL-Numbers
+sorts
+
+Directive
+templates
+
+Directive.MaxStack=<.maxstack <Int>> 
+Directive.Return=<ret>   
+Directive.LDC=<ldc.i4 <Int>>  

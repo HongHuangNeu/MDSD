@@ -1,0 +1,11 @@
+module CIL-pp
+imports
+	libstratego-gpp
+  libstratego-aterm
+
+rules
+	
+	pp-cil-string =
+    ast2abox(|[<import-term(lib/CIL/CIL.generated.pp.af)>,
+               <import-term(lib/CIL/CIL.pp.af)>]);
+    box2text-string(|100)

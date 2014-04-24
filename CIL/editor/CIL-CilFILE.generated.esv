@@ -1,0 +1,5 @@
+module CIL-CilFILE.generated
+
+completions
+  completion template CilFILE : "CILHeader " =
+    <CILHeader:CILHeader> "\n" (cursor) (blank)  

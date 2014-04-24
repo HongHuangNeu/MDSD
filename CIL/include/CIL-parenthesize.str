@@ -1,0 +1,10 @@
+module include/CIL-parenthesize
+
+imports
+  libstratego-lib
+
+
+strategies
+  io-CIL-parenthesize =
+    io-wrap(id)
+

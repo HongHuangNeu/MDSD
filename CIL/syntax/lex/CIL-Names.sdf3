@@ -1,0 +1,95 @@
+module lex/CIL-Names
+imports 
+  lex/CIL-Numbers
+sorts 
+    Identifier
+    SQIdentifier
+    QualifiedName
+    LabelName
+    
+    ClassName
+     FieldName
+    MethodName
+    
+	ClassRef
+	 VarRef
+	  LabelRef
+	  FRef
+	  MRef
+	lexical syntax
+		
+		[A-Za-z] [A-Za-z0-9\_]* -> Identifier
+		
+		Identifier							-> SQIdentifier
+		"'" Identifier "'"			-> SQIdentifier
+		
+		{Identifier "."}+ 			-> QualifiedName
+		
+		~[\=\:\.\"\-\ \t\n\r]+	-> LabelName
+         
+        "extern"->Identifier {reject}
+		"mscorlib"->Identifier {reject}
+		"assembly"->Identifier {reject}
+		"extern"->LabelName {reject}
+		"mscorlib"->LabelName {reject}
+		"assembly"->LabelName {reject}
+		"ret"->LabelName {reject}
+		"ret"->Identifier {reject}
+		"call"->LabelName {reject}
+		"call"->Identifier {reject}
+		"void"->LabelName {reject}
+		"void"->Identifier {reject}
+		"int32"->LabelName {reject}
+		"int32"->Identifier {reject}
+        "[mscorlib]"->LabelName {reject}
+        "[mscorlib]"->Identifier {reject}
+
+
+		
+	lexical restrictions
+		
+		Identifier 	-/- [a-zA-Z0-9\_]
+		LabelName		-/- ~[\=\:\.\"\-\ \t\n\r]
+		
+	
+	
+		
+	templates
+		
+	 ClassName=<<QualifiedName>>
+	FieldName=<<Identifier>>
+	MethodName=<<Identifier>>
+				 
+		//"<init>"			-> MethodName {"Init"}
+			 VarName=<<SQIdentifier>>
+	VarName=<<Identifier>>
+	templates
+		
+				 ClassRef.CRef=<<ClassName>>
+							 VarRef.VarNum=<<Int>>	
+		// VarName     		-> VarRef	{"VarRef"}
+		 		 LabelRef.LabelRef=<<LabelName>>
+		
+					 FRef.FRef=<<FieldName>>
+				 MRef.MRef=<<MethodName>>
+		
+		
+		
+	syntax
+		
+		%%<ClassRef-CF> "/" <FRef-CF> <LAYOUT?-CF> <FieldDescriptor-CF>  -> <FieldRef-CF>	 {"JBCFieldRef"}		
+		%%<ClassRef-CF> "/" <MRef-CF> 			 			 <MethodDescriptor-CF> -> <MethodRef-CF> {"JBCMethodRef"}
+
+	context-free syntax
+		
+		"byte" 				-> BaseTypeName {"ByteName"}
+		"char" 				-> BaseTypeName {"CharName"}
+		"double" 			-> BaseTypeName {"DoubleName"}
+		"float"				-> BaseTypeName {"FloatName"}
+		"int" 				-> BaseTypeName {"IntName"} 
+		"long" 				-> BaseTypeName {"LongName"}
+		"short"				-> BaseTypeName {"ShortName"}
+		"boolean"			-> BaseTypeName {"BooleanName"}
+		
+		
+		

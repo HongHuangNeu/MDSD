@@ -1,0 +1,9 @@
+module CIL-Directive.generated
+
+completions
+  completion template Directive : ".maxstack Int" =
+    ".maxstack " <Int:Int>  
+  completion template Directive : "ret" =
+    "ret"  
+  completion template Directive : "ldc.i4 Int" =
+    "ldc.i4 " <Int:Int>  

@@ -1,0 +1,734 @@
+\documentclass[10pt,a4paper]{amsart}
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\author{G. C. Muganda\\Department of Computer Science\\North Central College}
+\title{Programming CIL for the .NET Platform}
+\begin{document}
+\maketitle
+\setlength{\parskip}{0.2cm}
+\setlength{\parindent}{0pt}
+
+\section{Introduction}
+CIL is the Common Intermediate Language for the .NET platform. CIL is the language for a stack oriented virtual machine much like the Java Virtual Machine. This article will introduce CIL.
+
+CIL is actually an object-oriented assembly language: it supports  classes, inheritance, polymorphism, 
+exception handling, and provides access to the entire class library that comes with .NET. We will start 
+by listing a number of .NET classes and methods for doing IO, and then show how those methods can 
+be called from CIL.
+
+\section{Standard Output Methods}
+The .NET System namespace has a Console class that has several Write and WriteLine methods and several 
+Read and ReadLine methods. These methods can be used to perform output and input, respectively.
+We mention only a few of them: for the full story, consult the MSDN documentation online
+\begin{enumerate}
+\item  Console.Write(int32)
+\item Console.Write(String)
+\item Console.Write(Object)
+\item Console.Write(String, Object)
+\item Console.Write(String, Object, Object)
+\item Console.Write(String, Object, Object, Object)
+\end{enumerate}
+The first three methods write a 32 bit integer, a string, an object (by calling its {\tt ToString()} method.
+THe last three methods take a string that specifies formatting information, as well as one or more objects as parameters. The string is used to specify how the objects should be formatted. Look online for more informatin.
+
+All these methods have {\tt WriteLine} versions that send a newline delimiter to standard output after 
+writing their arguments.
+
+
+
+
+\section{Standard Input Method}
+
+We will use the 
+\begin{verbatim}
+  String Console.ReadLine()
+\end{verbatim}  
+which returns a string that corresponds to the next available line in the input.
+To read an integer number from the console, first read the number as a string using {\tt ReadLine()} and
+then parse the number using the method
+
+\begin{verbatim}
+Int.Parse(String s)
+\end{verbatim}
+
+This method is similar to the {\tt Integer.parseInt(String s)} method in Java.
+
+\section{An Overview of CIL Instructions}
+
+As already mentioned, the .NET  CLR (Common Language Runtime), the virtual machine that executies CIL,
+is a stack machine. All instructions look for and remove their arguments from the stack, perform on operation
+on the arguments, and push the result back onto the stack. Functions (methods) likewise, when called, take their
+parameters from the stack and place their result on the stack before returning. Thus a method replaces the arguments 
+it finds at the top of the stack with its result.
+
+Selected instructions are as follows. 
+\subsection{Load Instructions}
+
+The load family of instructions push a value onto the stack. A subfamily of the load instructions has the 
+form  
+\begin{verbatim}
+ldc.i4  value
+\end{verbatim}
+loads a 4-byte (32 bit) compile time integer constant onto the top of the stack. For example 
+\begin{verbatim}
+ldc.14 100
+\end{verbatim}
+loads 100 onto the stack.
+
+There is a special form used to load small integers in the range 0..8. For example, 
+\begin{verbatim}
+ldc.i4.0
+ldc.i4.1
+ldc.i4.8
+\end{verbatim}
+load 0, 1, and 8 onto the top of the stack respectively.  In addition
+\begin{verbatim}
+ldc.i4.m1
+\end{verbatim} 
+loads minus 1 ($-1)$.
+
+There is a family for loading values of local variables of a method onto the stack. Each local
+variable is assigned a position or offset, such as 0, 1, 2, \ldots, and so on. Local variables 
+are declared by a statement such as
+\begin{verbatim}
+.locals init (int32 a, int32 b, int32 c)
+\end{verbatim}
+which allocates local variable {\tt a, b, c}, assigning them the respective positions 0, 1, and 2.
+The values can then be loaded on the stack as follows:
+\begin{verbatim}
+ldloc.0          // load a
+ldloc.2          // load c
+\end{verbatim}
+
+Likewise there is a family for loading values of method parameters onto the top of the stack.
+Parameters are assigned positions according to their order in the parameter list. For example
+a method 
+\begin{verbatim}
+.method int32 myMethod(int32 a, int32b)
+\end{verbatim}
+has two parameters a and b at positions 0 and 1 respectively.
+The {\tt ldarg} subfamily loads values of parameters onto the stack:
+\begin{verbatim}
+ldarg.0   // load argument a
+ldarg.1   // load argument b
+\end{verbatim}
+
+Finally, a reference to a string can be loaded onto the stack using
+\begin{verbatim}
+ldstr  string
+\end{verbatim}
+
+\subsection{Store Instructions}
+
+A  {\tt stloc} store instruction removes a value from the top of the stack and stores it in a local variable.
+\begin{verbatim}
+stloc.0   // store into local variable at position 0
+stloc.4   // store into local variable at position 4
+\end{verbatim}
+
+\subsection{Branching Instructions}
+The branching instructions specify jumps, both conditional and unconditional.
+The unconditional jump is specified by
+\begin{verbatim}
+br  target
+\end{verbatim}
+Such an instruction causes an unconditional transfer to the targetted instruction.
+The conditional branches are 
+\begin{verbatim}
+beq target
+bne target
+bgt target
+bge target
+blt target
+ble target
+\end{verbatim}
+All six take two values off of the top of the stack, compare them, and jump if the the first value
+is equal, not equal, greater than, greater or equal, less than, or less or equal.
+
+Two other conditional jumps pop a single value off of the stack and jump according to whether the
+value is true or false:
+
+\begin{verbatim}
+brfalse target
+brtrue target
+\end{verbatim}
+
+
+\section{Arithmetic Instructions}
+
+The following instructions add, subtract, and multiply two values. The values are at the top of the stack
+are removed and replaced by the sum, difference, or product.
+
+\begin{verbatim}
+add
+sub
+mul
+\end{verbatim}
+
+Finally, 
+\begin{verbatim}
+neg
+\end{verbatim}
+replaces the top of the stack with its negative.
+
+
+\section{Miscellaneous}
+
+Two more instructions are of interest:
+\begin{verbatim}
+box int32
+pop
+\end{verbatim}
+The first instruction removes a 32 bit integer from the stack and boxes it up (forms a wrapper object 
+containing the integer). It then pushes the wrapper object back onto the stack. This is useful
+when you need to pass an integer to a method that is expecting an object.
+
+{\tt pop} removes the value at the top of the stack and discards it. 
+
+
+
+
+You can find more complete listings 
+of CIL instructions on line. See, for example:
+
+\begin{verbatim}
+http://en.csharp-online.net/CIL_Instruction_Set
+\end{verbatim}
+
+
+\section{Hello World}
+
+Here is a simple program in CIL. It is the traditional Hello World program.
+\begin{verbatim}
+.assembly extern mscorlib{}
+
+.assembly HelloWorld
+{
+    .ver 1:0:1:0
+}
+
+.method static void main()
+{
+    .entrypoint
+    .maxstack 1
+
+    ldstr "Hello world!"
+    call void [mscorlib]System.Console::WriteLine(string)
+    ret
+}
+\end{verbatim}
+
+This simple program illustrates a number of concepts.
+
+
+The  directive {\tt .entrypoint} indicates that this is the method at which
+execution of the program will start.  The {\tt .maxstack} indicates that 
+the method will use a single slot on the stack.  Each CIL method must declare
+in this way the number of stack slots that it will use.
+
+On the .NET platform, an assembly is an executable module or a library module
+The first {\tt .assembly} directive
+references an external assembly, the {\tt mscorlib} library, which contains, among
+other things, the methods for doing input and output. The second {\tt.assembly}
+directive specifies a name for the assembly of which this module will be a part, as well as a version
+number for the assembly being created. Put these two directives at the top of your CIL files.
+
+\section{Running CIL Programs}
+
+
+Let us run the above program. 
+Microsoft provides a commandline tool, {\tt ilasm}, that can be used to assemble 
+CIL programs and produce executables. The easiest way to use {\tt ilasm} is 
+to open up a Visual Studio Command Prompt. Follow these steps:
+\begin{enumerate}
+\item  From your Windows Programs menu find the following sequence of entries:
+\begin{verbatim}
+Microsoft Visual Studio 2008
+Visual Studio Tools
+Visual  Studio 2008 Command Prompt
+\end{verbatim}
+and click on the last item listed to open up the command prompt. Now the {\tt cd}
+command to navigate to the directory you will use to store your {\tt cil} files.
+For example, you might use 
+the command
+
+\begin{verbatim}
+C:\Users\gcm\Ncc\Classes\Winter10\220\ilasm>
+\end{verbatim}
+to navigate to a diectory named {\tt ilasm} that has been created for this purpose.
+
+\item Using a text editor, create a file with an {\tt il} extension, say {\tt Hello.il} 
+containing the above program. Save the file.
+
+\item Assemble the program using the command
+\begin{verbatim}
+C:\Users\gcm\Ncc\Classes\Winter10\220\ilasm>ilasm hello.il
+\end{verbatim}
+
+\item Execute the program by invoking its name on the commandline:
+\begin{verbatim}
+C:\Users\gcm\Ncc\Classes\Winter10\220\ilasm>hello
+\end{verbatim}
+\end{enumerate}
+
+
+
+
+
+\section{Local variables}
+
+The following method, (found on an online site) is uses three local variables.
+It prompts the user for two numbers, computes the sum, and prints the result. It uses the
+the version of {\tt System.Console.Write} that takes a format string and three additional objects.
+The format string is
+\begin{verbatim}
+"{0} + {1} = {2}"
+\end{verbatim}
+It uses placeholders much as C printf format strings do, except the placeholders identify the
+arguments to be inserted by their zero-based positions.
+
+{\tt .locals init} declares local variables and stipulates that they be initialiazed to their default
+values. It establishes indentifiers that will be used to access those local variables.
+
+{\tt box int32} removes an integer from the stack, boxes it into a wrapper object, and pushes
+the reference to the wrapper object onto the stack.
+
+\begin{verbatim}
+.assembly extern mscorlib{}
+.assembly LocalVars
+{
+    .ver 1:0:1:0
+}
+
+.method static void main()
+{
+    .entrypoint
+    .maxstack 4
+    // declare loca variables 
+    .locals init (int32 first, int32 second, int32 result)
+    // read first number and store in first local variable
+    ldstr "First number: "
+    call void [mscorlib]System.Console::Write(string)
+    call string [mscorlib]System.Console::ReadLine()
+    call int32 [mscorlib]System.Int32::Parse(string)
+    stloc first
+    // read second number and store in second local variable
+    ldstr "Second number: "
+    call void [mscorlib]System.Console::Write(string)
+    call string [mscorlib]System.Console::ReadLine()
+    call int32 [mscorlib]System.Int32::Parse(string)
+    stloc second
+    // add the two numbers and store in third local variable
+    ldloc first
+    ldloc second
+    add
+    stloc result
+    // load the format string
+    ldstr "{0} + {1} = {2}"
+    // load the three objects to print
+    ldloc first
+    box int32    
+    ldloc second
+    box int32    
+    ldloc result
+    box int32
+    // call method to print
+    call void [mscorlib]System.Console::WriteLine(string, object, 
+                                                 object, object) 
+    ret
+}
+\end{verbatim}
+
+The results of an example run are
+\begin{verbatim}
+C:\Users\gcm\Ncc\Classes\Winter10\220\ilasm>localvars2
+First number: 2
+Second number: 3
+2 + 3 = 5
+\end{verbatim}
+
+Note that the calls to the various methods include type information to resolve
+ambiguities resulting from method overloading.
+
+The following is a simpler version of the above program: it reads in two numbers and prints the sum.
+
+\begin{verbatim}
+.assembly extern mscorlib{}
+
+.assembly sumprog
+{
+    .ver 1:0:1:0
+}
+
+.method static void main()
+{
+    .entrypoint
+    .maxstack 4    
+    .locals init (int32 first, int32 second)                  
+
+    ldstr "First number: "
+    call void [mscorlib]System.Console::Write(string)
+    call string [mscorlib]System.Console::ReadLine()
+    call int32 [mscorlib]System.Int32::Parse(string)    
+    
+    ldstr "Second number: "
+    call void [mscorlib]System.Console::Write(string)
+    call string [mscorlib]System.Console::ReadLine()
+    call int32 [mscorlib]System.Int32::Parse(string)    
+    
+    add
+    call void [mscorlib]System.Console::Write(int32)   
+    ret
+}
+\end{verbatim}
+
+\section{CIL Programs With Methods}
+
+A simple method that takes two integers as parameters and returns the sum
+is written as follows.
+\begin{verbatim}
+.method static int32 sum(int32, int32)
+{
+   .maxstack 2
+   ldarg.0
+   ldarg.1
+   add
+   ret
+}
+\end{verbatim}
+It pushes its two parameters, the values to be added onto the stack and then performs
+and {\tt add} before returning. A full program using {\tt sum} follows.
+
+
+\begin{verbatim}
+.assembly extern mscorlib{}
+.assembly HelloWorld
+{
+    .ver 1:0:1:0
+}
+
+.method static void main()
+{
+    .entrypoint
+    .maxstack 4    
+    .locals init (int32 first, int32 second)                  
+
+    ldstr "First number: "
+    call void [mscorlib]System.Console::Write(string)
+    call string [mscorlib]System.Console::ReadLine()
+    call int32 [mscorlib]System.Int32::Parse(string)    
+    
+    ldstr "Second number: "
+    call void [mscorlib]System.Console::Write(string)
+    call string [mscorlib]System.Console::ReadLine()
+    call int32 [mscorlib]System.Int32::Parse(string)
+    
+    call int32 sum(int32, int32)
+    call void [mscorlib]System.Console::Write(int32) 
+    ret
+}
+
+.method static int32 sum(int32, int32)
+{
+    .maxstack 4
+    ldarg.0
+    ldarg.1
+    add
+    ret
+}
+\end{verbatim}
+\section{Branching Examples}
+
+The binary branching opcodes are
+\begin{verbatim}
+beq, bne, bgt, bge, blt, ble,
+\end{verbatim}
+
+and the unary opcodes ones are
+\begin{verbatim}
+brfalse, brtrue
+\end{verbatim}
+
+Here is an example of putting  these to work writing a function to compute the maximum of two integers:
+\begin{verbatim}
+.assembly extern mscorlib{}
+.assembly max
+{
+    .ver 1:0:1:0
+}
+.method static void main()
+{
+    .entrypoint
+    .maxstack 4
+    
+    .locals init (int32 first, int32 second)                  
+
+    ldstr "First number: "
+    call void [mscorlib]System.Console::Write(string)
+    call string [mscorlib]System.Console::ReadLine()
+    call int32 [mscorlib]System.Int32::Parse(string)    
+    
+    ldstr "Second number: "
+    call void [mscorlib]System.Console::Write(string)
+    call string [mscorlib]System.Console::ReadLine()
+    call int32 [mscorlib]System.Int32::Parse(string)
+
+    ldstr "The maximum is "
+    call void [mscorlib]System.Console::Write(string)
+    
+    call int32 max(int32, int32)
+    call void [mscorlib]System.Console::Write(int32)  
+    ret
+}
+
+.method static int32 max(int32 a, int32  b)
+{
+    .maxstack 2    
+    
+     ldarg.0
+     ldarg.1
+     bge   firstBigger
+     ldarg.1
+     ret
+firstBigger:
+     ldarg.0
+     ret
+}
+\end{verbatim}
+
+\section{Recursion}
+
+Here is an example of a recursion in a CIL program. The program uses a recursive method
+to compute the combination of $n$ things taken $k$ at a time according to the algorithm
+illustrated in the following C code.
+
+
+\begin{verbatim}
+  int comb(int n, int k)
+  {
+     if (k == 0) return 1;
+     if (n == k) return 1;     
+     return comb(n-1) + comb(n-1, k-1);  
+  }
+\end{verbatim} 
+
+
+The CIL implementation of this recursive algorithm can be found in
+the following program.
+\begin{verbatim}
+.assembly extern mscorlib{}
+
+.assembly comb
+{
+    .ver 1:0:1:0
+}
+
+.method static void main()
+{
+    .entrypoint
+    .maxstack 4
+    
+    .locals init (int32 first, int32 second)                  
+
+    ldstr "First number: "
+    call void [mscorlib]System.Console::Write(string)
+    call string [mscorlib]System.Console::ReadLine()
+    call int32 [mscorlib]System.Int32::Parse(string)
+    stloc.0    
+    
+    ldstr "Second number: "
+    call void [mscorlib]System.Console::Write(string)
+    call string [mscorlib]System.Console::ReadLine()
+    call int32 [mscorlib]System.Int32::Parse(string)
+    stloc.1
+
+    ldstr "comb({0},{1}) is "
+    ldloc.0
+    box int32
+    ldloc.1
+    box int32
+    call void [mscorlib]System.Console::Write(string, 
+                                      object, object)    
+    
+    ldloc.0
+    ldloc.1
+    call int32 comb(int32, int32)
+    call void [mscorlib]System.Console::Write(int32)       
+
+    ret
+}
+
+.method static int32 comb(int32 n, int32  k)
+{
+     .maxstack 4
+    
+     ldc.i4.1      //default return value of 1
+    
+     // if k = 0  return 1 
+     ldarg.1
+     ldc.i4.0
+     beq  comb_is_done
+     
+     // if n == k  return 1
+     ldarg.0
+     ldarg.1
+     beq  comb_is_done
+
+     pop            //remove default value of 1 from the stack
+
+     //compute comb(n-1, k)
+     ldarg.0
+     ldc.i4.1
+     sub
+     ldarg.1
+     
+     call int32 comb(int32, int32)
+
+     //compute comb(int32, int32)
+     ldarg.0
+     ldc.i4.1
+     sub
+     ldarg.1
+     ldc.i4.1
+     sub
+     call int32 comb(int32, int32)
+
+     // return comb(n-1, k) + comb(n-1, k-1)
+     add
+comb_is_done:
+     ret
+}
+\end{verbatim}
+
+\section{Looping}
+
+Loops can be implemented using CIL. Consider a program to output a list of 
+the first 10 positive integer squares:
+\begin{verbatim}
+1
+4
+9
+16
+25
+36
+49
+64
+81
+100
+\end{verbatim}
+
+We can use a main method with two local variables $k$ and $n$
+initialized to 1 and 10 respectively. The strategy is to step $k$
+through the range 1..10, printing $k^2$ at each iteration of the loop.
+We need to compare $k$ to $n$ at each iteration, and we can do that by
+pushing $k$ and $n$ onto the stack and applying the 
+\begin{verbatim}
+bgt  endOfloop
+\end{verbatim}
+instruction to detect when to terminate the loop. The {\tt br}
+clears $k$ and $n$ from the stack. If the jump to the end does not take place
+we load  two 
+copies of $k$ onto the stack and apply {\tt mul}. The produce is left on the 
+stack to be removed and printed. Details of implementation can be seen
+in the following code.
+\begin{verbatim}
+.assembly extern mscorlib{}
+
+.assembly HelloWorld
+{
+    .ver 1:0:1:0
+}
+
+
+.method static void main()
+{
+    .entrypoint
+    .maxstack 2
+    
+    .locals init (int32 k, int32 n)
+                  
+    ldc.i4.1       //k = 1
+    stloc.0
+    ldc.i4 10      //n = 10
+    stloc.1    
+topOfLoop:
+    ldloc.0        //k
+    ldloc.1        //n
+    bgt  done      //if k > n we are done
+    //print k*k
+    ldloc.0
+    ldloc.0
+    mul
+    call void [mscorlib]System.Console::WriteLine(int32)
+    //k = k + 1
+    ldloc.0
+    ldc.i4.1
+    add
+    stloc.0
+    br  topOfLoop
+done:
+    ret
+}
+\end{verbatim}
+
+
+\section{Assignment 4}
+
+Write a CIL program that prompts the user for a positive integer $n$ and prints the 
+first $n$ terms of the fibonacci sequence
+\begin{verbatim}
+1  1   2  3, 5, 8, 13, \ldots,
+\end{verbatim}
+Your program must use a {\tt fibonacci} method separate from main, and the method must be 
+recursive.
+
+\section{Assignment 5}
+
+Write a CIL program that prompts the user for a positive integer $n$ and prints the 
+first $n$ terms of the fibonacci sequence
+\begin{verbatim}
+1  1   2  3, 5, 8, 13, ....
+\end{verbatim}
+Your program must use a {\tt fibonacci} method separate from main, and the method must be 
+not be recursive.
+
+
+
+\section{Optional Extra Credit Assignment}
+This is for 2 percent extra credit: if you get a 100 \% on this you get 2 points added to your 
+average for the entire course!
+
+The number of ways to partition a set of $n$ objects into $k$ disjoint non-empty subsets is called
+a Stirling number of the second kind. For example, the set $ \{1, 2, 3\}$ can be partitioned into 1 subset in only
+one way:
+$$\{1, 2, 3\}$$
+but can be partitioned into 2 non-empty subsets in 3 ways:
+$$ 
+\begin{array}{cc}
+\{1\} & \{2, 3\} \\
+\{2\} & \{1, 3\} \\
+\{3\} & \{2, 3\}
+\end{array}
+$$
+and into 3 non-empty subsets in only one way:
+$$ \begin{array}{ccc} \{1\}  & \{2\} & \{3\} \end{array}$$
+
+Stirling numbers are usually denoted by $s(n, k)$.
+It can be shown that Stirling numbers of the second kind can be defined using the function
+
+\begin{verbatim}
+int stirling(n, k)
+{
+   if (k = 1 || n == k)
+     return 1;
+   else 
+     return stirling(n-1, k-1) + k * stirling(n-1, k);
+}
+\end{verbatim}
+
+Write a CIL program that prompts the user for $n$ and $k$, where $n \ge k \ge 1$, and 
+prints the stirling number $s(n, k)$.
+
+\end{document}

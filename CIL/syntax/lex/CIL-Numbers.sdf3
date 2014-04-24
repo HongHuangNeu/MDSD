@@ -1,0 +1,17 @@
+module lex/CIL-Numbers
+ 
+sorts
+  Constant
+  Int
+	
+	lexical syntax
+		
+		[0-9] [0-9]* 	-> Int
+		
+	lexical restrictions
+		
+		Int -/- [0-9]
+
+	context-free syntax
+		
+		Int -> Constant 

@@ -1,0 +1,6 @@
+module general/CIL-Type
+sorts
+Type
+templates
+Type.Int=<int32>
+Type.Void=<void>  

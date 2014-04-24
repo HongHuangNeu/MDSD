@@ -1,0 +1,20 @@
+module general/CIL-Method
+imports lex/CIL-Names general/CIL-Type general/CIL-Statement
+        general/CIL-Directive
+
+exports
+  sorts Method
+
+  context-free syntax
+    ".method" "public" "specialname" "rtspecialname" "void" ".ctor" "(" {Type ","}* ")" "cil" "managed" "{" Statement* "}" -> Method       {cons("Constructor"), prefer}
+    ".method" MethodAccess* "static" Type MethodName "(" {Type ","}* ")" "{" EntryPoint Statement* "}"                     -> Method       {cons("MainMethod"), prefer}
+    ".method" MethodAccess* Type MethodName "(" {Type ","}* ")" "{" Statement* "}"                                         -> Method       {cons("Method")}
+    "public"                                                                                                               -> MethodAccess {cons("PUBLIC")}
+    "specialname"                                                                                                          -> MethodAccess {cons("SPECIALNAME")}
+    "rtspecialname"                                                                                                        -> MethodAccess {cons("RTSPECIALNAME")}
+    ".entrypoint"                                                                                                          -> EntryPoint   {cons("EntryPoint")}
+
+  context-free syntax
+    CONTENTCOMPLETE -> Method       {cons("COMPLETION-Method")}
+    CONTENTCOMPLETE -> MethodAccess {cons("COMPLETION-MethodAccess")}
+    CONTENTCOMPLETE -> EntryPoint   {cons("COMPLETION-EntryPoint")}

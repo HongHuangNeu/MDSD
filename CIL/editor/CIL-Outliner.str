@@ -1,0 +1,11 @@
+module editor/CIL-Outliner
+
+imports
+  include/CIL
+  lib/runtime/editor/outline-library
+  lib/runtime/editor/origins
+  editor/CIL-Outliner.generated
+
+rules
+  
+  outline-expand-to-level = !3

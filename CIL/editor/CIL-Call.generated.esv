@@ -1,0 +1,8 @@
+
+module CIL-Call.generated
+
+completions
+  completion template Call : "call ReturnType LibraryObject::MethodName()" =
+    "call " <ReturnType:ReturnType> " " <Library:Library> <Object:Object> "::" <MethodName:MethodName> "()"  
+  completion template Library : "[mscorlib]" =
+    "[mscorlib]"                                              

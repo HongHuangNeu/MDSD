@@ -1,0 +1,1 @@
+Module("CIL-Completions.generated",NoImports,[Completions("",[]),Completions("",[CompletionKeyword(String("\".class\""),None),CompletionKeyword(String("\".maxstack\""),None),CompletionKeyword(String("\".method\""),None),CompletionKeyword(String("\".entrypoint\""),None),CompletionKeyword(String("\".assembly\""),None),CompletionKeyword(String("\"[mscorlib]\""),None)])])

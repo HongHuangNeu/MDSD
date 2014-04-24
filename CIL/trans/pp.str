@@ -1,0 +1,41 @@
+module pp
+
+imports
+
+	libstratego-gpp
+	lib/runtime/tmpl/pp
+	Common.pp.generated
+	
+	libstratego-gpp
+	lib/runtime/tmpl/pp
+	include/CIL-parenthesize
+
+	Common.pp.generated
+	CIL.pp.generated
+    CIL-Class.pp.generated
+    CIL-Component.pp.generated  
+    CIL-Directive.pp.generated
+    CIL-Field.pp.generated
+    CIL-Header.pp.generated
+    CIL-Method.pp.generated
+    CIL-Names.pp.generated
+    CIL-Numbers.pp.generated
+    CIL-Statement.pp.generated
+    CIL-Type.pp.generated
+    CIL-WhiteSpace.pp.generated
+     CIL-CilFILE.pp.generated
+      CIL-Call.pp.generated
+
+rules
+	
+   pp-CIL-string =
+    prettyprint-CilFILE 
+    ; !V([], <id>)
+    ; box2text-string(|120)
+      
+ pp-debug :
+    ast -> result
+    with
+       result := <pp-CIL-string> ast
+    <+ <bottomup(try(not(is-string); not(is-list); not(pp-CIL-string); debug(!"cannot pp ")))> ast
+    ;  result := ""

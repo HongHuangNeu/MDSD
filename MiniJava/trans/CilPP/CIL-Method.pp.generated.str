@@ -1,0 +1,125 @@
+module CilPP/CIL-Method.pp.generated
+
+strategies
+  prettyprint-Method :
+    Constructor(a, b) -> [ H(
+                             [SOpt(HS(), "0")]
+                           , [S(".method public specialname rtspecialname void .ctor("), a11, S(") cil managed")]
+                           )
+                         , H(
+                             [SOpt(HS(), "0")]
+                           , [S("{")]
+                           )
+                         , b5
+                         , H(
+                             [SOpt(HS(), "0")]
+                           , [S("}")]
+                           )
+                         ]
+    where a11 := <pp-H-list(prettyprint-Type|",")> a
+    where b5 := <pp-indent(|"2")> [<pp-V-list(prettyprint-Statement)> b]
+
+  prettyprint-Method :
+    MainMethod(a, b, c, d, e, f) -> [ H(
+                                        [SOpt(HS(), "0")]
+                                      , [ S(".method ")
+                                        , a12
+                                        , S(" static ")
+                                        , b6
+                                        , S(" ")
+                                        , c2
+                                        , S("(")
+                                        , d1
+                                        , S(")")
+                                        ]
+                                      )
+                                    , H(
+                                        [SOpt(HS(), "0")]
+                                      , [S("{")]
+                                      )
+                                    , H(
+                                        [SOpt(HS(), "0")]
+                                      , [e1]
+                                      )
+                                    , H(
+                                        [SOpt(HS(), "0")]
+                                      , [f0]
+                                      )
+                                    , H(
+                                        [SOpt(HS(), "0")]
+                                      , [S("}")]
+                                      )
+                                    ]
+    where a12 := <pp-H-list(prettyprint-MethodAccess); debug(!"g: ")> a
+    where b6 := <pp-one-Z(prettyprint-Type); debug(!"h: ")> b
+    where c2 := <pp-one-Z(prettyprint-MethodName); debug(!"i: ")> c
+    where d1 := <pp-H-list(prettyprint-Type|","); debug(!"j: ")> d
+    where e1 := <pp-one-Z(prettyprint-EntryPoint); debug(!"k: ")> e
+    where f0 := <pp-V-list(prettyprint-Statement); debug(!"l: ")> f
+
+  prettyprint-Method :
+    Method(a, b, c, d, e) -> [ H(
+                                 [SOpt(HS(), "0")]
+                               , [ S(".method ")
+                                 , a13
+                                 , S(" ")
+                                 , b7
+                                 , S(" ")
+                                 , c3
+                                 , S("(")
+                                 , d2
+                                 , S(")")
+                                 ]
+                               )
+                             , H(
+                                 [SOpt(HS(), "0")]
+                               , [S("{")]
+                               )
+                             , e2
+                             , H(
+                                 [SOpt(HS(), "0")]
+                               , [S("}")]
+                               )
+                             ]
+    where a13 := <pp-H-list(prettyprint-MethodAccess)> a
+    where b7 := <pp-one-Z(prettyprint-Type)> b
+    where c3 := <pp-one-Z(prettyprint-MethodName)> c
+    where d2 := <pp-H-list(prettyprint-Type|",")> d
+    where e2 := <pp-indent(|"2")> [<pp-V-list(prettyprint-Statement)> e]
+
+  prettyprint-MethodAccess :
+    PUBLIC() -> [ H(
+                    [SOpt(HS(), "0")]
+                  , [S("public")]
+                  )
+                ]
+
+  prettyprint-MethodAccess :
+    SPECIALNAME() -> [ H(
+                         [SOpt(HS(), "0")]
+                       , [S("specialname")]
+                       )
+                     ]
+
+  prettyprint-MethodAccess :
+    RTSPECIALNAME() -> [ H(
+                           [SOpt(HS(), "0")]
+                         , [S("rtspecialname")]
+                         )
+                       ]
+
+  prettyprint-EntryPoint :
+    EntryPoint() -> [ H(
+                        [SOpt(HS(), "0")]
+                      , [S(".entrypoint")]
+                      )
+                    ]
+
+  prettyprint-example =
+    prettyprint-Method
+
+  prettyprint-example =
+    prettyprint-MethodAccess
+
+  prettyprint-example =
+    prettyprint-EntryPoint

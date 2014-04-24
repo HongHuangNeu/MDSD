@@ -1,0 +1,26 @@
+module general/CIL-Header
+imports
+lex/CIL-Names
+sorts
+CILHeader
+templates
+ 
+CILHeader.Header=
+<
+<CallExternal>
+<Property>
+>
+
+CallExternal.CallExternal=
+<
+.assembly extern mscorlib {}
+>
+
+Property.Property=
+<
+.assembly <ClassName>
+{
+    <ClassName*>    
+}
+>
+// to be changed 

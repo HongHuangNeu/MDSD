@@ -1,0 +1,11 @@
+module general/CIL-CilFILE
+imports general/CIL-Header
+  general/CIL-Component
+  sorts
+  CilFILE
+templates
+CilFILE.File=
+<	 
+<CILHeader> 
+<Component*;separator="\n"> 
+> 

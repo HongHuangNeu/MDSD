@@ -1,0 +1,1 @@
+Module("editor/CIL-Outliner",[Imports([Import("include/CIL"),Import("lib/runtime/editor/outline-library"),Import("lib/runtime/editor/origins"),Import("editor/CIL-Outliner.generated")]),Rules([SDefNoArgs("outline-expand-to-level",Build(NoAnnoList(Int("3"))))])])

@@ -1,0 +1,62 @@
+module codegen/example
+
+imports
+  
+  milestone1/MiniJava
+  milestone2/MiniJava.core
+//  lib/jasmin/JasminXT
+  lib/CIL/CIL
+rules
+	to-jbc = program-to-jbc + class-to-jbc + stmt-to-jbc + exp-to-jbc
+	exp-to-jbc: IntValue(i) -> [LDC(i)]
+  program-to-jbc:Program(m,c)->result
+     where
+     	result:=<class-to-jbc>m
+
+
+
+  class-to-jbc:MainClass(n,id2,s)->r
+  where
+   	  //<strip-annos>n
+   	   head:=Header(CallExternal(), Property(<strip-annos>n, []));
+   	  
+   	  <debug(!"head:  ")>head;
+ 
+   	 stmt* := <stmt-to-jbc>s;
+  class*:=[Class(
+      []
+    , <strip-annos>n
+    , [ MainMethod(
+          []
+        , Void()
+        , "main"
+        , []
+        , EntryPoint()
+        , [ MaxStack("5")
+          , stmt*
+          , Return()
+          ]
+        )
+      ]
+    )];
+   	    r:=File(head,class*)
+   	    
+   	      	
+     	
+  
+  
+  
+   	   
+   stmt-to-jbc: Print(s)->temp*
+   where
+   	
+   	  exp*:=<exp-to-jbc>s;
+   	  <debug(!"exp:  ")>exp*;
+      call*:= [Call(Void(), MSLibrary(), Object("System.Console"), "WriteLine", [Int()])];  	  
+   	    <debug(!"call:  ")>call*;
+   	  temp*:=[exp*
+          , call*];
+              <debug(!"temp:  ")>temp*
+  
+  
+  	 

@@ -1,0 +1,1 @@
+Module("runtime/editor/editor",[Rules([SDefT("project-path",[],[],[]),SDefT("plugin-path",[],[],[]),SDefT("refresh-workspace-file",[],[],[]),SDefT("editor-init",[],[],[])])])

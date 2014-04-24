@@ -1,0 +1,28 @@
+module CilPP/CIL-Directive.pp.generated
+
+strategies
+  prettyprint-Directive :
+    MaxStack(a) -> [ H(
+                       [SOpt(HS(), "0")]
+                     , [S(".maxstack "), a7]
+                     )
+                   ]
+    where a7 := <pp-one-Z(prettyprint-Int)> a
+
+  prettyprint-Directive :
+    Return() -> [ H(
+                    [SOpt(HS(), "0")]
+                  , [S("ret")]
+                  )
+                ]
+
+  prettyprint-Directive :
+    LDC(a) -> [ H(
+                  [SOpt(HS(), "0")]
+                , [S("ldc.i4 "), a8]
+                )
+              ]
+    where a8 := <pp-one-Z(prettyprint-Int)> a
+
+  prettyprint-example =
+    prettyprint-Directive

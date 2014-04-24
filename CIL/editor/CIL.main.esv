@@ -1,0 +1,29 @@
+module CIL.main
+
+imports
+  CIL-Menus
+  CIL-Refactorings
+  CIL-Colorer
+  CIL-Completions
+  CIL-Folding
+  CIL-References
+  CIL-Syntax
+
+language General properties
+  
+  name:    CIL
+  id:  CIL
+  extends: Root
+  
+  description: "Spoofax-generated editor for the CIL language"
+  url: http://strategoxt.org
+  
+  extensions: il
+  table:  include/CIL.tbl
+  start symbols: Start
+  
+  provider: include/cil.ctree
+  provider: include/cil-java.jar
+  observer: editor-analyze (multifile)
+  
+  on save : editor-save

@@ -1,0 +1,19 @@
+module general/CIL-Class
+imports
+lex/CIL-Names
+general/CIL-Type
+general/CIL-Statement
+general/CIL-Directive
+general/CIL-Method
+templates
+Class.Class=
+< 
+.class <ClassAccess*> <ClassName>
+{ 
+<Method*;separator="\n"> 	
+} 
+>
+ 
+
+ClassAccess.PUBLIC=<public>
+ 

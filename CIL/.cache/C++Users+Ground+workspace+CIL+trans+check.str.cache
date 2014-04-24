@@ -1,0 +1,1 @@
+Module("check",[Imports([Import("include/CIL")]),Rules([RDefNoArgs("constraint-error",RuleNoCond(Wld,RootApp(Fail))),RDefNoArgs("constraint-warning",RuleNoCond(Wld,RootApp(Fail))),RDefNoArgs("constraint-note",RuleNoCond(Wld,RootApp(Fail)))])])

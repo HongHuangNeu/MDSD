@@ -1,0 +1,12 @@
+module general/CIL-Statement
+imports 
+general/CIL-Directive
+lex/CIL-Names
+general/CIL-Call
+sorts
+Statement
+templates
+Statement=<<Directive>>
+Statement=<<Label>>
+Statement=<<Call>>
+Label=<<LabelName>:>    

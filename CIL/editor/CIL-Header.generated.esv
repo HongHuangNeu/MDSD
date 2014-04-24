@@ -1,0 +1,9 @@
+module CIL-Header.generated
+
+completions
+  completion template CILHeader : "CallExternal Property" =
+    <CallExternal:CallExternal> "\n" <Property:Property> (blank)  
+  completion template CallExternal : ".assembly extern mscorlib {}" =
+    ".assembly extern mscorlib {}" (blank)  
+  completion template Property : ".assembly ClassName { }" =
+    ".assembly " <ClassName:ClassName> "\n{\n\t\t" (cursor) "\n}" (blank)  
